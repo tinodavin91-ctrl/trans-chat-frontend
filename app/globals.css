@@ -1,0 +1,642 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Dark RGB animated message composer */
+.rgb-composer {
+  position: relative;
+  isolation: isolate;
+  background: #11131c;
+  border: 1px solid transparent;
+  overflow: hidden;
+}
+
+/* Animated RGB border */
+.rgb-composer::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  z-index: -2;
+  border-radius: inherit;
+
+  background: linear-gradient(
+    90deg,
+    #ff0055,
+    #ff00aa,
+    #7a00ff,
+    #0066ff,
+    #00eaff,
+    #00ff88,
+    #ffe600,
+    #ff0055
+  );
+
+  background-size: 400% 100%;
+  animation: rgbBorder 6s linear infinite;
+
+  filter: blur(3px);
+}
+
+/* Dark inner layer */
+.rgb-composer::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: #11131c;
+}
+
+@keyframes rgbBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* RGB glow when typing */
+.rgb-composer:focus-within::before {
+  filter: blur(6px);
+  opacity: 1;
+  animation-duration: 3s;
+}
+
+/* Keep controls above animation */
+.rgb-composer > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================================================
+   NOVACHAT - DARK RGB CHAT BACKGROUND
+   ========================================================= */
+
+.chat-rgb-wrapper {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* Main animated RGB background */
+.chat-rgb-area {
+  position: relative;
+  isolation: isolate;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #080a12;
+}
+
+/* RGB light blobs */
+.chat-rgb-area::before {
+  content: "";
+  position: fixed;
+  top: 5%;
+  left: 20%;
+  width: 500px;
+  height: 500px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(91, 45, 255, 0.20) 0%,
+      rgba(91, 45, 255, 0.08) 30%,
+      transparent 70%
+    );
+
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: -2;
+
+  animation: rgbFloatOne 12s ease-in-out infinite alternate;
+}
+
+/* Second RGB light */
+.chat-rgb-area::after {
+  content: "";
+  position: fixed;
+  right: 5%;
+  bottom: 10%;
+  width: 550px;
+  height: 550px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(0, 200, 255, 0.16) 0%,
+      rgba(0, 100, 255, 0.08) 30%,
+      transparent 70%
+    );
+
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: -2;
+
+  animation: rgbFloatTwo 15s ease-in-out infinite alternate;
+}
+
+
+/* =========================================================
+   MOVING RGB LIGHT
+   ========================================================= */
+
+@keyframes rgbFloatOne {
+  0% {
+    transform: translate3d(-100px, -50px, 0) scale(0.9);
+  }
+
+  25% {
+    transform: translate3d(150px, 100px, 0) scale(1.1);
+  }
+
+  50% {
+    transform: translate3d(300px, -50px, 0) scale(0.95);
+  }
+
+  75% {
+    transform: translate3d(100px, 250px, 0) scale(1.15);
+  }
+
+  100% {
+    transform: translate3d(-150px, 100px, 0) scale(0.9);
+  }
+}
+
+
+@keyframes rgbFloatTwo {
+  0% {
+    transform: translate3d(100px, 100px, 0) scale(0.9);
+  }
+
+  25% {
+    transform: translate3d(-150px, -100px, 0) scale(1.1);
+  }
+
+  50% {
+    transform: translate3d(-250px, 150px, 0) scale(0.95);
+  }
+
+  75% {
+    transform: translate3d(50px, -150px, 0) scale(1.15);
+  }
+
+  100% {
+    transform: translate3d(150px, 100px, 0) scale(0.9);
+  }
+}
+
+
+/* =========================================================
+   RGB COMPOSER
+   ========================================================= */
+
+.rgb-composer {
+  position: relative;
+  isolation: isolate;
+  background: #0d101b;
+  border: 1px solid transparent;
+  overflow: hidden;
+}
+
+/* Animated RGB border */
+.rgb-composer::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+
+  border-radius: inherit;
+
+  background: linear-gradient(
+    90deg,
+    #ff007a,
+    #7a00ff,
+    #0066ff,
+    #00d9ff,
+    #00ff88,
+    #ffe600,
+    #ff007a
+  );
+
+  background-size: 400% 100%;
+
+  animation: rgbBorderMove 7s linear infinite;
+
+  filter: blur(4px);
+
+  z-index: -2;
+}
+
+/* Dark center */
+.rgb-composer::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+
+  border-radius: inherit;
+
+  background: #0d101b;
+
+  z-index: -1;
+}
+
+
+/* RGB border animation */
+@keyframes rgbBorderMove {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+/* Make RGB stronger while typing */
+.rgb-composer:focus-within::before {
+  filter: blur(7px);
+  animation-duration: 3s;
+}
+
+
+/* Keep composer controls above the animation */
+.rgb-composer > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* =========================================================
+   TRANSCHAT DEEP RGB CHAT BACKGROUND
+   ========================================================= */
+
+.chat-rgb-wrapper {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #050711;
+}
+
+
+/* =========================================================
+   CHAT AREA
+   ========================================================= */
+
+.chat-rgb-area {
+  position: relative;
+  isolation: isolate;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  background:
+    radial-gradient(
+      circle at 75% 25%,
+      rgba(25, 30, 100, 0.10),
+      transparent 35%
+    ),
+    #050711;
+}
+
+
+/* =========================================================
+   PURPLE RGB LIGHT
+   ========================================================= */
+
+.chat-rgb-area::before {
+  content: "";
+
+  position: absolute;
+
+  width: 650px;
+  height: 650px;
+
+  left: -250px;
+  bottom: -250px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(190, 0, 255, 0.30) 0%,
+      rgba(130, 0, 255, 0.20) 20%,
+      rgba(80, 0, 255, 0.10) 40%,
+      transparent 72%
+    );
+
+  filter: blur(70px);
+
+  pointer-events: none;
+
+  animation: rgbPurple 14s ease-in-out infinite alternate;
+
+  z-index: -2;
+}
+
+
+/* =========================================================
+   BLUE / CYAN RGB LIGHT
+   ========================================================= */
+
+.chat-rgb-area::after {
+  content: "";
+
+  position: absolute;
+
+  width: 700px;
+  height: 700px;
+
+  right: -300px;
+  bottom: -300px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(0, 130, 255, 0.25) 0%,
+      rgba(0, 80, 255, 0.16) 25%,
+      rgba(0, 220, 255, 0.08) 45%,
+      transparent 72%
+    );
+
+  filter: blur(80px);
+
+  pointer-events: none;
+
+  animation: rgbBlue 17s ease-in-out infinite alternate;
+
+  z-index: -2;
+}
+
+
+/* =========================================================
+   PURPLE ANIMATION
+   ========================================================= */
+
+@keyframes rgbPurple {
+
+  0% {
+    transform:
+      translate3d(-100px, 80px, 0)
+      scale(0.85);
+  }
+
+  25% {
+    transform:
+      translate3d(100px, -80px, 0)
+      scale(1.05);
+  }
+
+  50% {
+    transform:
+      translate3d(300px, -150px, 0)
+      scale(1.15);
+  }
+
+  75% {
+    transform:
+      translate3d(150px, 100px, 0)
+      scale(0.95);
+  }
+
+  100% {
+    transform:
+      translate3d(-100px, 150px, 0)
+      scale(0.85);
+  }
+
+}
+
+
+/* =========================================================
+   BLUE ANIMATION
+   ========================================================= */
+
+@keyframes rgbBlue {
+
+  0% {
+    transform:
+      translate3d(100px, 100px, 0)
+      scale(0.85);
+  }
+
+  25% {
+    transform:
+      translate3d(-100px, -100px, 0)
+      scale(1);
+  }
+
+  50% {
+    transform:
+      translate3d(-250px, -50px, 0)
+      scale(1.15);
+  }
+
+  75% {
+    transform:
+      translate3d(-100px, 150px, 0)
+      scale(1);
+  }
+
+  100% {
+    transform:
+      translate3d(100px, 100px, 0)
+      scale(0.85);
+  }
+
+}
+
+
+/* =========================================================
+   MESSAGE IMAGE RGB GLOW
+   ========================================================= */
+
+.chat-image-glow {
+  box-shadow:
+    0 0 10px rgba(120, 60, 255, 0.35),
+    0 0 30px rgba(0, 120, 255, 0.15);
+
+  transition:
+    box-shadow 0.4s ease,
+    transform 0.4s ease;
+}
+
+.chat-image-glow:hover {
+  transform: scale(1.01);
+
+  box-shadow:
+    0 0 15px rgba(170, 50, 255, 0.55),
+    0 0 40px rgba(0, 130, 255, 0.30);
+}
+
+
+/* =========================================================
+   RGB MESSAGE COMPOSER
+   ========================================================= */
+
+.rgb-composer {
+  position: relative;
+
+  isolation: isolate;
+
+  background: rgba(8, 11, 22, 0.95);
+
+  border: 1px solid transparent;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 0 15px rgba(0, 110, 255, 0.08);
+}
+
+
+/* Animated RGB border */
+
+.rgb-composer::before {
+  content: "";
+
+  position: absolute;
+
+  inset: -2px;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      #ff0099,
+      #7b2cff,
+      #0066ff,
+      #00d9ff,
+      #00ff99,
+      #7b2cff,
+      #ff0099
+    );
+
+  background-size: 400% 100%;
+
+  animation:
+    rgbBorder 8s linear infinite;
+
+  filter: blur(3px);
+
+  opacity: 0.85;
+
+  z-index: -2;
+}
+
+
+/* Dark inside */
+
+.rgb-composer::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 1px;
+
+  border-radius: inherit;
+
+  background: #080b16;
+
+  z-index: -1;
+}
+
+
+/* =========================================================
+   COMPOSER RGB MOVEMENT
+   ========================================================= */
+
+@keyframes rgbBorder {
+
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+
+}
+
+
+/* Stronger glow while typing */
+
+.rgb-composer:focus-within {
+  box-shadow:
+    0 0 15px rgba(90, 60, 255, 0.15),
+    0 0 35px rgba(0, 150, 255, 0.08);
+}
+
+.rgb-composer:focus-within::before {
+  filter: blur(5px);
+  opacity: 1;
+  animation-duration: 4s;
+}
+
+
+/* Keep controls above the RGB layers */
+
+.rgb-composer > * {
+  position: relative;
+  z-index: 2;
+}
+
+
+/* =========================================================
+   DARK SCROLLBAR
+   ========================================================= */
+
+.chat-rgb-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-rgb-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-rgb-area::-webkit-scrollbar-thumb {
+  background: rgba(100, 100, 140, 0.25);
+  border-radius: 10px;
+}
+
+.chat-rgb-area::-webkit-scrollbar-thumb:hover {
+  background: rgba(130, 100, 255, 0.45);
+}
