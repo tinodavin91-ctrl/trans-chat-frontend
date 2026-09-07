@@ -24,7 +24,7 @@ export function useNotificationSound() {
       // Some browsers suspend the context until a user gesture happens;
       // resume it just in case.
       if (ctx.state === "suspended") {
-        ctx.resume();
+        ctx.resume().catch((e) => console.warn("Failed to resume audio context:", e));
       }
 
       const now = ctx.currentTime;

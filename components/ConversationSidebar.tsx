@@ -121,7 +121,7 @@ export default function ConversationSidebar() {
     return () => {
       echo.leave(`user.${user.id}`);
     };
-  }, [token, user, pathname]);
+  }, [token, user, pathname, playNotificationSound]);
 
   // Whenever the user navigates into a chat, that conversation's unread
   // count should drop to 0 immediately in the sidebar (the chat page itself
