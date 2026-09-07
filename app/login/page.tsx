@@ -73,7 +73,7 @@ router.push("/chat");
 
         <p className="text-sm text-gray-500 mt-4">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-black font-medium underline">
+          <Link href="/register" className="text-white font-medium underline">
             Register
           </Link>
         </p>
