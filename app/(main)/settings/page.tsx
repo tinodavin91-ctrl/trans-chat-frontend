@@ -73,11 +73,11 @@ export default function SettingsPage() {
     <div className="flex-1 h-screen overflow-y-auto bg-[#080a12]">
       <div className="max-w-lg mx-auto px-6 py-10">
         <div className="flex items-center gap-3 mb-8">
-          <Link
-            href="/"
-            className="w-8 h-8 rounded-full flex items-center justify-center text-[#8B92A5] hover:bg-[#171b2b] hover:text-white transition"
-            title="Back"
-          >
+        <Link
+  href="/chat"
+  className="w-8 h-8 rounded-full flex items-center justify-center text-[#8B92A5] hover:bg-[#171b2b] hover:text-white transition"
+  title="Back"
+>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M19 12H5M12 19l-7-7 7-7" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
