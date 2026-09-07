@@ -40,7 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function login(email: string, password: string) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify({ email, password }),
@@ -61,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function register(name: string, email: string, password: string) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/register`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify({ name, email, password }),
@@ -84,7 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   function logout() {
     if (token) {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/logout`, {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/logout`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       }).catch(() => {});
