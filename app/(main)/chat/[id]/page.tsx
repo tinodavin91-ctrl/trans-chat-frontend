@@ -137,10 +137,6 @@ export default function ChatPage() {
   const [typingUserName, setTypingUserName] =
     useState<string | null>(null);
 
-  /* --------------------------------------------------
-     LOAD CONVERSATION
-  -------------------------------------------------- */
-
   useEffect(() => {
     if (!token || !id) return;
 
@@ -150,10 +146,6 @@ export default function ChatPage() {
     setSearchOpen(false);
     setSearchQuery("");
   }, [token, id]);
-
-  /* --------------------------------------------------
-     REALTIME CHAT
-  -------------------------------------------------- */
 
   useEffect(() => {
     if (!token || !id) return;
@@ -234,19 +226,11 @@ export default function ChatPage() {
     };
   }, [token, id]);
 
-  /* --------------------------------------------------
-     AUTO SCROLL
-  -------------------------------------------------- */
-
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
       behavior: "smooth",
     });
   }, [messages]);
-
-  /* --------------------------------------------------
-     CLOSE REACTION PICKER
-  -------------------------------------------------- */
 
   useEffect(() => {
     if (reactionPickerFor === null) return;
@@ -259,10 +243,6 @@ export default function ChatPage() {
       window.removeEventListener("click", close);
     };
   }, [reactionPickerFor]);
-
-  /* --------------------------------------------------
-     CLOSE STICKER PICKER (click outside)
-  -------------------------------------------------- */
 
   useEffect(() => {
     if (!stickerPickerOpen) return;
@@ -283,12 +263,8 @@ export default function ChatPage() {
     };
   }, [stickerPickerOpen]);
 
-  /* --------------------------------------------------
-     LOAD CONVERSATION
-  -------------------------------------------------- */
-
-  async function loadConversation() {
-    setLoading(true);
+  async function loadConversation(showLoading = true) {
+    if (showLoading) setLoading(true);
 
     const res = await fetch(
       process.env.NEXT_PUBLIC_API_URL +
@@ -311,7 +287,7 @@ export default function ChatPage() {
 
     setConversation(data);
     setMessages(data.messages || []);
-    setLoading(false);
+    if (showLoading) setLoading(false);
 
     fetch(
       process.env.NEXT_PUBLIC_API_URL +
@@ -327,10 +303,6 @@ export default function ChatPage() {
       }
     );
   }
-
-  /* --------------------------------------------------
-     SEND MESSAGE
-  -------------------------------------------------- */
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
@@ -366,16 +338,12 @@ export default function ChatPage() {
     const data = await res.json();
 
     if (res.ok) {
-      setMessages((prev) => [...prev, data]);
       setBody("");
+      await loadConversation(false);
     }
 
     setSending(false);
   }
-
-  /* --------------------------------------------------
-     STICKERS
-  -------------------------------------------------- */
 
   async function openStickerPicker() {
     setStickerPickerOpen((v) => !v);
@@ -448,7 +416,7 @@ export default function ChatPage() {
       const data = await res.json();
 
       if (res.ok) {
-        setMessages((prev) => [...prev, data]);
+        await loadConversation(false);
       }
     } finally {
       setSendingSticker(false);
@@ -497,10 +465,6 @@ export default function ChatPage() {
     }
   }
 
-  /* --------------------------------------------------
-     TYPING
-  -------------------------------------------------- */
-
   function handleBodyChange(value: string) {
     setBody(value);
 
@@ -518,10 +482,6 @@ export default function ChatPage() {
       channelRef.current?.whisper("stopTyping", {});
     }, 1500);
   }
-
-  /* --------------------------------------------------
-     STAR MESSAGE
-  -------------------------------------------------- */
 
   async function toggleStar(messageId: number) {
     setMessages((prev) =>
@@ -583,10 +543,6 @@ export default function ChatPage() {
       );
     }
   }
-
-  /* --------------------------------------------------
-     REACTIONS
-  -------------------------------------------------- */
 
   async function toggleReaction(
     messageId: number,
@@ -682,10 +638,6 @@ export default function ChatPage() {
     }
   }
 
-  /* --------------------------------------------------
-     LONG PRESS
-  -------------------------------------------------- */
-
   function startLongPress(messageId: number) {
     longPressTimerRef.current = setTimeout(() => {
       setReactionPickerFor(messageId);
@@ -698,10 +650,6 @@ export default function ChatPage() {
       longPressTimerRef.current = null;
     }
   }
-
-  /* --------------------------------------------------
-     GROUP REACTIONS
-  -------------------------------------------------- */
 
   function groupedReactions(
     reactions: Reaction[] = []
@@ -718,10 +666,6 @@ export default function ChatPage() {
 
     return groups;
   }
-
-  /* --------------------------------------------------
-     FILE UPLOAD
-  -------------------------------------------------- */
 
   async function handleFilePicked(
     e: React.ChangeEvent<HTMLInputElement>
@@ -755,17 +699,13 @@ export default function ChatPage() {
       const data = await res.json();
 
       if (res.ok) {
-        setMessages((prev) => [...prev, data]);
+        await loadConversation(false);
       }
     } finally {
       setUploading(false);
       e.target.value = "";
     }
   }
-
-  /* --------------------------------------------------
-     VOICE RECORDING
-  -------------------------------------------------- */
 
   async function toggleRecording() {
     if (recording) {
@@ -842,10 +782,7 @@ export default function ChatPage() {
           const data = await res.json();
 
           if (res.ok) {
-            setMessages((prev) => [
-              ...prev,
-              data,
-            ]);
+            await loadConversation(false);
           }
         } finally {
           setUploading(false);
@@ -868,10 +805,6 @@ export default function ChatPage() {
       );
     }
   }
-
-  /* --------------------------------------------------
-     CONVERSATION HELPERS
-  -------------------------------------------------- */
 
   function conversationLabel() {
     if (!conversation) return "";
@@ -908,7 +841,6 @@ export default function ChatPage() {
     );
   }
 
-  // "My Stickers" is a virtual pack shown alongside the real packs
   const displayPacks: StickerPack[] = [
     { id: MY_STICKERS_ID, name: "My Stickers", stickers: myStickers },
     ...stickerPacks,
@@ -923,11 +855,6 @@ export default function ChatPage() {
   return (
     <div className="flex h-screen">
       <div className="flex-1 flex flex-col h-screen bg-[#080a12] chat-rgb-wrapper">
-
-        {/* ==================================================
-            HEADER
-        ================================================== */}
-
         <div className="px-5 py-3.5 border-b border-[#232733] flex items-center justify-between">
           <button
             onClick={() =>
@@ -965,7 +892,6 @@ export default function ChatPage() {
           </button>
 
           <div className="flex items-center gap-1">
-            {/* Search */}
             <button
               onClick={() => {
                 setSearchOpen((v) => !v);
@@ -1002,7 +928,6 @@ export default function ChatPage() {
               </svg>
             </button>
 
-            {/* Info */}
             <button
               onClick={() =>
                 setInfoOpen((v) => !v)
@@ -1048,10 +973,6 @@ export default function ChatPage() {
           </div>
         </div>
 
-        {/* ==================================================
-            SEARCH
-        ================================================== */}
-
         {searchOpen && (
           <div className="px-5 py-2.5 border-b border-[#232733]">
             <input
@@ -1066,10 +987,6 @@ export default function ChatPage() {
             />
           </div>
         )}
-
-        {/* ==================================================
-            MESSAGES
-        ================================================== */}
 
         <div className="chat-rgb-area flex-1 overflow-y-auto px-6 py-4 space-y-2">
           {(() => {
@@ -1115,10 +1032,6 @@ export default function ChatPage() {
                 Object.keys(
                   reactionGroups
                 ).length > 0;
-
-              /* ------------------------------------------
-                 STAR BUTTON
-              ------------------------------------------ */
 
               const starButton = (
                 <button
@@ -1172,22 +1085,13 @@ export default function ChatPage() {
                       : "justify-start")
                   }
                 >
-                  {/* Star before my message */}
                   {isMine && starButton}
-
-                  {/* ======================================
-                      MESSAGE WRAPPER
-                  ====================================== */}
 
                   <div
                     className={
                       "relative flex-shrink-0 max-w-[70%]"
                     }
                   >
-                    {/* ==================================
-                        STICKER (no bubble)
-                    ================================== */}
-
                     {isSticker ? (
                       <div
                         onMouseDown={() =>
@@ -1245,10 +1149,6 @@ export default function ChatPage() {
                         )}
                       </div>
                     ) : (
-                    /* ==================================
-                        MESSAGE BUBBLE
-                    ================================== */
-
                     <div
                       onMouseDown={() =>
                         startLongPress(msg.id)
@@ -1280,7 +1180,6 @@ export default function ChatPage() {
                           : "bg-[#232733] text-[#EDEFF5] rounded-bl-md")
                       }
                     >
-                      {/* Audio */}
                       {msg.attachment_type ===
                         "audio" &&
                         msg.attachment_url && (
@@ -1293,7 +1192,6 @@ export default function ChatPage() {
                           />
                         )}
 
-                      {/* Image */}
                       {msg.attachment_type ===
                         "image" &&
                         msg.attachment_url && (
@@ -1306,7 +1204,6 @@ export default function ChatPage() {
                           />
                         )}
 
-                      {/* File */}
                       {msg.attachment_type ===
                         "file" &&
                         msg.attachment_url && (
@@ -1322,10 +1219,6 @@ export default function ChatPage() {
                           </a>
                         )}
 
-                      {/* ==================================
-                          MESSAGE TEXT
-                      ================================== */}
-
                       {msg.body && (
                         <p
                           className={
@@ -1340,10 +1233,6 @@ export default function ChatPage() {
                           {msg.body}
                         </p>
                       )}
-
-                      {/* ==================================
-                          READ CHECKMARK
-                      ================================== */}
 
                       {isMine && (
                         <div className="flex justify-end mt-1">
@@ -1378,10 +1267,6 @@ export default function ChatPage() {
                       )}
                     </div>
                     )}
-
-                    {/* ==================================
-                        REACTIONS
-                    ================================== */}
 
                     {hasReactions && (
                       <div
@@ -1451,10 +1336,6 @@ export default function ChatPage() {
                       </div>
                     )}
 
-                    {/* ==================================
-                        REACTION PICKER
-                    ================================== */}
-
                     {reactionPickerFor ===
                       msg.id && (
                       <div
@@ -1490,7 +1371,6 @@ export default function ChatPage() {
                     )}
                   </div>
 
-                  {/* Star after received message */}
                   {!isMine && starButton}
                 </div>
               );
@@ -1499,10 +1379,6 @@ export default function ChatPage() {
 
           <div ref={bottomRef} />
         </div>
-
-        {/* ==================================================
-            COMPOSER
-        ================================================== */}
 
         <form
           onSubmit={handleSend}
@@ -1514,7 +1390,6 @@ export default function ChatPage() {
             </p>
           )}
 
-          {/* Hidden input for uploading a new sticker */}
           <input
             ref={stickerFileInputRef}
             type="file"
@@ -1523,16 +1398,11 @@ export default function ChatPage() {
             onChange={handleStickerUpload}
           />
 
-          {/* ==================================
-              STICKER PICKER PANEL
-          ================================== */}
-
           {stickerPickerOpen && (
             <div
               ref={stickerPickerRef}
               className="absolute bottom-full left-4 mb-2 w-80 max-h-96 bg-[#12141C] border border-[#232733] rounded-2xl shadow-2xl flex flex-col overflow-hidden z-30"
             >
-              {/* Pack tabs */}
               <div className="flex gap-1 px-2 pt-2 border-b border-[#232733] overflow-x-auto">
                 {displayPacks.map((pack) => (
                   <button
@@ -1553,7 +1423,6 @@ export default function ChatPage() {
                 ))}
               </div>
 
-              {/* Sticker grid */}
               <div className="flex-1 overflow-y-auto p-3">
                 {stickerPacksLoading ? (
                   <p className="text-xs text-[#5B6072] text-center py-6">
@@ -1561,7 +1430,6 @@ export default function ChatPage() {
                   </p>
                 ) : (
                   <div className="grid grid-cols-4 gap-2">
-                    {/* Add-sticker tile, only on the My Stickers tab */}
                     {isMyStickersActive && (
                       <button
                         type="button"
@@ -1620,8 +1488,6 @@ export default function ChatPage() {
           )}
 
           <div className="rgb-composer flex items-center gap-2 rounded-full px-2 py-1.5">
-
-            {/* File input */}
             <input
               ref={fileInputRef}
               type="file"
@@ -1629,7 +1495,6 @@ export default function ChatPage() {
               onChange={handleFilePicked}
             />
 
-            {/* Attach */}
             <button
               type="button"
               onClick={() =>
@@ -1644,7 +1509,6 @@ export default function ChatPage() {
               </span>
             </button>
 
-            {/* Sticker */}
             <button
               type="button"
               onClick={openStickerPicker}
@@ -1681,7 +1545,6 @@ export default function ChatPage() {
               </svg>
             </button>
 
-            {/* Message input */}
             <input
               type="text"
               value={body}
@@ -1694,7 +1557,6 @@ export default function ChatPage() {
               className="flex-1 bg-transparent px-2 py-1.5 text-sm text-[#EDEFF5] placeholder:text-[#555b70] outline-none"
             />
 
-            {/* Microphone */}
             <button
               type="button"
               onClick={toggleRecording}
@@ -1727,7 +1589,6 @@ export default function ChatPage() {
               </svg>
             </button>
 
-            {/* Send */}
             <button
               type="submit"
               disabled={
@@ -1753,10 +1614,6 @@ export default function ChatPage() {
           </div>
         </form>
       </div>
-
-      {/* ==================================================
-          CONTACT INFO PANEL
-      ================================================== */}
 
       <ContactInfoPanel
         open={infoOpen}
